@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+from bibtools.pubmed import PubMed
+from bibtools.scihub import SciHub
+from bibtools.formatters import alpha
+from pybasics import read_file
+from urllib.parse import urlencode
+import sys
+import re
+import os
+
+
+del sys.argv[0]
+
+formatter = None
+
+for i in range(0, len(sys.argv), 2):
+
+    if sys.argv[i] == '-f':
+        if sys.argv[i + 1] == 'alpha':
+            formatter = alpha
+
+    elif sys.argv[i] == '-i':
+        data = sys.argv[i + 1].split(',')
+
+    elif sys.argv[i] == '-l':
+        data = read_file(sys.argv[i + 1], True)
+
+pub = PubMed()
+sci = SciHub()
+
+for reference in data:
+
+    print('Reference:', reference)
+
+    if formatter:
+        reference = formatter(reference)
+
+    print('Reference:', reference)
+
+    pub.search(request=reference)
+
+    for _id in pub.results['idlist']:
+
+        print('PMID:', _id)
+
+        pub.fetch(_id)
+
+        try:
+            pub.download(_id)
+
+        except:
+            print('PubMed.download(): except')
+
+        if not os.path.exists(pub.fname + '.pdf'):
+
+            try:
+                sci.download(request=pub.url + _id, fname=pub.fname + '.pdf')
+
+            except:
+                print('SciHub.download(): except')
