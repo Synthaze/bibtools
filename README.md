@@ -2,7 +2,7 @@
 
 Retrieve papers and metadata from the command-line.
 
-Intended for MedLine/PubMed referenced papers.
+Intended for papers referenced in MedLine/PubMed.
 
 Install:
 
