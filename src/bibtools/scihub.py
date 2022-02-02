@@ -34,9 +34,9 @@ class SciHub:
       'request': None,
     }
 
-    def __init__(self, storage):
+    def __init__(self):
 
-        self.storage = storage
+        pass
 
         return None
 
@@ -66,7 +66,7 @@ class SciHub:
 
                 self.pdf = requests.get(url=url, headers=self.headers)
 
-                write_file(os.path.join(self.storage, fname), self.pdf.content, mode='wb')
+                write_file(fname, self.pdf.content, mode='wb')
 
         print('SciHub.download(): end')
 

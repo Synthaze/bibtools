@@ -72,17 +72,19 @@ class PubMed:
 
         self.fname = self.FirstAuthor + self.ArticleDate_Year + '_' + self.ArticleTitle + '_' + self.pmid
         self.fname = re.sub(r'[_]+', '_', self.fname)
-        
+
         if len(self.storage + self.fname) >= 250:
             max_length = 250 - len(self.pmid) - 4
             self.fname = '_'.join(self.fname.split('_')[:-1])[:max_length] + '_TR_' + self.pmid
-            
-        write_json(os.path.join(self.storage, self.fname + '.json'), data.data)
+
+        self.fname = os.path.join(self.storage, self.fname)
+
+        write_json(oself.fname + '.json', data.data)
 
         self.bib = json2bibtex(data.data)
 
         if self.bibtex:
-            write_file(os.path.join(self.storage, self.fname + '.bib'), self.bib)
+            write_file(self.fname + '.bib', self.bib)
 
         print('PubMed.fetch(): end')
 
@@ -98,7 +100,7 @@ class PubMed:
 
         self.pdf = requests.get(link, headers=self.headers)
 
-        write_file(os.path.join(self.storage, self.fname + '.pdf'), self.pdf.content, mode='wb')
+        write_file(self.fname + '.pdf', self.pdf.content, mode='wb')
 
         print('PubMed.download(): end')
 

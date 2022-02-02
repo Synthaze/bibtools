@@ -11,8 +11,8 @@ import os
 
 del sys.argv[0]
 
-storage = '/rna/biblio/recent/'
-#storage = os.getcwd()
+#storage = '/rna/biblio/recent/'
+storage = os.getcwd()
 
 formatter = None
 
@@ -32,7 +32,6 @@ for i in range(0, len(sys.argv), 2):
         storage = sys.argv[i + 1]
 
 pub = PubMed(storage)
-sci = SciHub(storage)
 
 if '-b' in sys.argv:
     pub.bibtex = True
@@ -63,7 +62,7 @@ for reference in data:
 
         pub.fetch(_id)
 
-        if not os.path.exists(os.path.join(pub.storage, pub.fname + '.pdf')):
+        if not os.path.exists(pub.fname + '.pdf'):
 
             try:
                 pub.download(_id)
@@ -71,9 +70,10 @@ for reference in data:
             except:
                 print('PubMed.download(): except')
 
-        if not os.path.exists(os.path.join(pub.storage, pub.fname + '.pdf')):
+        if not os.path.exists(pub.fname + '.pdf'):
 
             try:
+                sci = SciHub()
                 sci.download(request=pub.url + _id, fname=pub.fname + '.pdf')
 
             except:
