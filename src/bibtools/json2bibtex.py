@@ -77,4 +77,6 @@ def json2bibtex(json_data):
         bibtex = [x for x in bibtex.splitlines() if 'pages = ' not in x]
         bibtex = '\n'.join(bibtex)
 
+    bibtex = bibtex.replace('&', '\&')
+
     return bibtex

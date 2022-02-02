@@ -16,7 +16,7 @@ Fetch PubMed Central for open-access papers as well as Sci-Hub:
 
     bibtools -i PMID1,PMID2 # Comma-separated PMIDs and/or DOIs
 
-    bibtools -l pmids.dat # List file of PMIDs (or DOIs), one per line
+    bibtools -i pmids.dat # List file of PMIDs (or DOIs), one per line
 
     bibtools -i PMID -b # Generate bibtex from MedLine citation data
 

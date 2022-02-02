@@ -1,47 +1,16 @@
 #!/usr/bin/env python3
 from bibtools.pubmed import PubMed
 from bibtools.scihub import SciHub
-from bibtools.formatters import alpha
-from pybasics import read_file
+from bibtools.json2bibtex import json2bibtex
+from bibtools.utils import argparse
 from urllib.parse import urlencode
+from pybasics import write_file
 import sys
 import re
 import os
 
 
-del sys.argv[0]
-
-#storage = '/rna/biblio/recent/'
-storage = os.getcwd()
-
-formatter = None
-
-for i in range(0, len(sys.argv), 2):
-
-    if sys.argv[i] == '-f':
-        if sys.argv[i + 1] == 'alpha':
-            formatter = alpha
-
-    elif sys.argv[i] == '-i':
-        data = sys.argv[i + 1].split(',')
-
-    elif sys.argv[i] == '-l':
-        data = read_file(sys.argv[i + 1], True)
-
-    elif sys.argv[i] == '-p':
-        storage = sys.argv[i + 1]
-
-pub = PubMed(storage)
-
-if '-b' in sys.argv:
-    pub.bibtex = True
-else:
-    pub.bibtex = False
-
-if '-c' in sys.argv:
-    cite = True
-else:
-    cite = False
+data, storage, formatter, bibtex, cite = argparse(sys.argv)
 
 citations = []
 
@@ -53,6 +22,8 @@ for reference in data:
         reference = formatter(reference)
 
     print('Reference:', reference)
+
+    pub = PubMed(storage)
 
     pub.search(request=reference)
 
@@ -79,8 +50,13 @@ for reference in data:
             except:
                 print('SciHub.download(): except')
 
+        pub.bibtex = json2bibtex(pub.json)
+
+        if bibtex:
+            write_file(pub.fname + '.bib', pub.bibtex)
+
         if cite:
-            header = pub.bib.split('@article{')[1].split(',')[0]
+            header = pub.bibtex.split('@article{')[1].split(',')[0]
             cite = pub.RawArticleTitle.strip('.') + '~\cite{' + header +'}' + '.'
             citations.append(cite)
 

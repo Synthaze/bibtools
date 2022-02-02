@@ -2,7 +2,6 @@
 from utilsovs import fetch_one_PubMed
 from utilsovs.pubmed import altsearch_MedLine_API
 from pybasics import write_json, write_file
-from bibtools.json2bibtex import json2bibtex
 import requests
 import re
 import os
@@ -48,11 +47,11 @@ class PubMed:
 
         print('PubMed.fetch(): start')
 
-        data = fetch_one_PubMed(_id)
+        self.json = fetch_one_PubMed(_id).data
 
-        Article = data.data['PubmedArticle'][0]['MedlineCitation']['Article']
+        Article = self.json['PubmedArticle'][0]['MedlineCitation']['Article']
 
-        self.pmcid = data.data['PubmedArticle'][0]['PubmedData']['ArticleIdList'][-1]
+        self.pmcid = self.json['PubmedArticle'][0]['PubmedData']['ArticleIdList'][-1]
         self.pmcid = self.pmcid if 'PMC' in self.pmcid else None
 
         self.pmid = _id
@@ -63,7 +62,6 @@ class PubMed:
         self.ArticleTitle = re.sub(r'[^A-Za-z0-9]', '_', Article['ArticleTitle'])
 
         self.ArticleDate_Year = Article['Journal']['JournalIssue']['PubDate']['Year']
-
 
         try:
             self.FirstAuthor = Article['AuthorList'][0]['LastName']
@@ -79,12 +77,7 @@ class PubMed:
 
         self.fname = os.path.join(self.storage, self.fname)
 
-        write_json(self.fname + '.json', data.data)
-
-        self.bib = json2bibtex(data.data)
-
-        if self.bibtex:
-            write_file(self.fname + '.bib', self.bib)
+        write_json(self.fname + '.json', self.json)
 
         print('PubMed.fetch(): end')
 
