@@ -77,7 +77,7 @@ class PubMed:
             max_length = 250 - len(self.pmid) - 4
             self.fname = '_'.join(self.fname.split('_')[:-1])[:max_length] + '_TR_' + self.pmid
             
-        write_json(self.storage + self.fname + '.json', data.data)
+        write_json(os.path.join(self.storage, self.fname + '.json'), data.data)
 
         self.bib = json2bibtex(data.data)
 

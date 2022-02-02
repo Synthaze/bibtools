@@ -11,8 +11,8 @@ import os
 
 del sys.argv[0]
 
-#storage = '/rna/biblio/recent/'
-storage = os.getcwd()
+storage = '/rna/biblio/recent/'
+#storage = os.getcwd()
 
 formatter = None
 
