@@ -5,6 +5,7 @@ from pybasics import write_json, write_file
 from bibtools.json2bibtex import json2bibtex
 import requests
 import re
+import os
 
 
 class PubMed:
@@ -81,7 +82,7 @@ class PubMed:
         self.bib = json2bibtex(data.data)
 
         if self.bibtex:
-            write_file(self.storage + self.fname + '.bib', self.bib)
+            write_file(os.path.join(self.storage, self.fname + '.bib'), self.bib)
 
         print('PubMed.fetch(): end')
 
@@ -97,7 +98,7 @@ class PubMed:
 
         self.pdf = requests.get(link, headers=self.headers)
 
-        write_file(self.storage + self.fname + '.pdf', self.pdf.content, mode='wb')
+        write_file(os.path.join(self.storage, self.fname + '.pdf'), self.pdf.content, mode='wb')
 
         print('PubMed.download(): end')
 

@@ -11,8 +11,8 @@ import os
 
 del sys.argv[0]
 
-storage = '/rna/biblio/recent/'
-#storage = os.getcwd() + '/'
+#storage = '/rna/biblio/recent/'
+storage = os.getcwd()
 
 formatter = None
 
@@ -63,7 +63,7 @@ for reference in data:
 
         pub.fetch(_id)
 
-        if not os.path.exists(pub.storage + pub.fname + '.pdf'):
+        if not os.path.exists(os.path.join(pub.storage, pub.fname + '.pdf')):
 
             try:
                 pub.download(_id)
@@ -71,7 +71,7 @@ for reference in data:
             except:
                 print('PubMed.download(): except')
 
-        if not os.path.exists(pub.storage + pub.fname + '.pdf'):
+        if not os.path.exists(os.path.join(pub.storage, pub.fname + '.pdf')):
 
             try:
                 sci.download(request=pub.url + _id, fname=pub.fname + '.pdf')
