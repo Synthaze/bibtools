@@ -79,7 +79,7 @@ class PubMed:
 
         self.fname = os.path.join(self.storage, self.fname)
 
-        write_json(oself.fname + '.json', data.data)
+        write_json(self.fname + '.json', data.data)
 
         self.bib = json2bibtex(data.data)
 
