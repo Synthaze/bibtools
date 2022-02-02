@@ -2,6 +2,7 @@
 from utilsovs import fetch_one_PubMed
 from utilsovs.pubmed import altsearch_MedLine_API
 from pybasics import write_json, write_file
+from bibtools.json2bibtex import json2bibtex
 import requests
 import re
 
@@ -11,8 +12,6 @@ class PubMed:
     url = 'https://pubmed.ncbi.nlm.nih.gov/'
 
     pmc = 'https://www.ncbi.nlm.nih.gov/pmc/articles/'
-
-    storage = '/rna/biblio/recent/'
 
     headers = {
         'cache-control': 'max-age=0',
@@ -28,7 +27,9 @@ class PubMed:
         'accept-language': 'en-US,en;q=0.9',
     }
 
-    def __init__(self):
+    def __init__(self, storage):
+
+        self.storage = storage
 
         return None
 
@@ -57,6 +58,7 @@ class PubMed:
 
         self.fetch_url = self.url + self.pmid
 
+        self.RawArticleTitle = Article['ArticleTitle']
         self.ArticleTitle = re.sub(r'[^A-Za-z0-9]', '_', Article['ArticleTitle'])
 
         self.ArticleDate_Year = Article['Journal']['JournalIssue']['PubDate']['Year']
@@ -75,6 +77,11 @@ class PubMed:
             self.fname = '_'.join(self.fname.split('_')[:-1])[:max_length] + '_TR_' + self.pmid
             
         write_json(self.storage + self.fname + '.json', data.data)
+
+        self.bib = json2bibtex(data.data)
+
+        if self.bibtex:
+            write_file(self.storage + self.fname + '.bib', self.bib)
 
         print('PubMed.fetch(): end')
 

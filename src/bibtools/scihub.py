@@ -6,8 +6,6 @@ from pybasics import webcheck, write_file
 
 class SciHub:
 
-    storage = '/rna/biblio/recent/'
-
     scheme = 'https://'
 
     links = [
@@ -35,7 +33,9 @@ class SciHub:
       'request': None,
     }
 
-    def __init__(self):
+    def __init__(self, storage):
+
+        self.storage = storage
 
         return None
 

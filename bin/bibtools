@@ -11,6 +11,9 @@ import os
 
 del sys.argv[0]
 
+storage = '/rna/biblio/recent/'
+#storage = os.getcwd() + '/'
+
 formatter = None
 
 for i in range(0, len(sys.argv), 2):
@@ -25,8 +28,23 @@ for i in range(0, len(sys.argv), 2):
     elif sys.argv[i] == '-l':
         data = read_file(sys.argv[i + 1], True)
 
-pub = PubMed()
-sci = SciHub()
+    elif sys.argv[i] == '-p':
+        storage = sys.argv[i + 1]
+
+pub = PubMed(storage)
+sci = SciHub(storage)
+
+if '-b' in sys.argv:
+    pub.bibtex = True
+else:
+    pub.bibtex = False
+
+if '-c' in sys.argv:
+    cite = True
+else:
+    cite = False
+
+citations = []
 
 for reference in data:
 
@@ -45,16 +63,27 @@ for reference in data:
 
         pub.fetch(_id)
 
-        try:
-            pub.download(_id)
+        if not os.path.exists(pub.storage + pub.fname + '.pdf'):
 
-        except:
-            print('PubMed.download(): except')
+            try:
+                pub.download(_id)
 
-        if not os.path.exists(pub.fname + '.pdf'):
+            except:
+                print('PubMed.download(): except')
+
+        if not os.path.exists(pub.storage + pub.fname + '.pdf'):
 
             try:
                 sci.download(request=pub.url + _id, fname=pub.fname + '.pdf')
 
             except:
                 print('SciHub.download(): except')
+
+        if cite:
+            header = pub.bib.split('@article{')[1].split(',')[0]
+            cite = pub.RawArticleTitle.strip('.') + '~\cite{' + header +'}' + '.'
+            citations.append(cite)
+
+
+if cite:
+    print('\n\n'.join(citations))
