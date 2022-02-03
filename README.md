@@ -36,7 +36,7 @@ Example of working calls:
 
     bibtools -i 25809265,10.1016/j.jmr.2007.04.002
 
-    bibtools -i 25809265,25809265 -b -c
+    bibtools -i 25809265,10.1016/j.jmr.2007.04.002 -b -c
 
 ## Help
 
