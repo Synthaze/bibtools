@@ -61,13 +61,18 @@ class PubMed:
         self.RawArticleTitle = Article['ArticleTitle']
         self.ArticleTitle = re.sub(r'[^A-Za-z0-9]', '_', Article['ArticleTitle'])
 
-        self.ArticleDate_Year = Article['Journal']['JournalIssue']['PubDate']['Year']
+        try:
+            self.ArticleDate_Year = Article['Journal']['JournalIssue']['PubDate']['Year']
+        except:
+            self.ArticleDate_Year = Article['Journal']['JournalIssue']['PubDate']['MedlineDate']
 
         try:
             self.FirstAuthor = Article['AuthorList'][0]['LastName']
         except:
-            self.FirstAuthor = Article['AuthorList'][0]['CollectiveName'].replace(' ', '')
-
+            try:
+                self.FirstAuthor = Article['AuthorList'][0]['CollectiveName'].replace(' ', '')
+            except:
+                self.FirstAuthor = str()
         self.fname = self.FirstAuthor + self.ArticleDate_Year + '_' + self.ArticleTitle + '_' + self.pmid
         self.fname = re.sub(r'[_]+', '_', self.fname)
 

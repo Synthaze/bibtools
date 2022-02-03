@@ -19,14 +19,20 @@ def json2bibtex(json_data):
     ### Authors list
     authorsLst = []
 
-    for author in medline['AuthorList']:
+    try:
+        for author in medline['AuthorList']:
+            try:
+                authorsLst.append(author['LastName'] + ' ' + author['Initials'])
+            except:
+                pass
+    except:
+        pass
+
+    if len(authorsLst) == 0:
         try:
-            authorsLst.append(author['LastName'] + ' ' + author['Initials'])
+            authorsLst.append(medline['AuthorList'][0]['CollectiveName'])
         except:
             pass
-            
-    if len(authorsLst) == 0:
-        authorsLst.append(medline['AuthorList'][0]['CollectiveName'])
 
     authorsLst = ' and '.join(authorsLst)
     bibtex = bibtex.replace('AUTHORSLST', authorsLst)
@@ -41,15 +47,22 @@ def json2bibtex(json_data):
     #print(medline['Journal']['ISOAbbreviation'])
 
     ### Year
-    year = medline['Journal']['JournalIssue']['PubDate']['Year']
+    try:
+        year = medline['Journal']['JournalIssue']['PubDate']['Year']
+    except:
+        year = medline['Journal']['JournalIssue']['PubDate']['MedlineDate']
+
     bibtex = bibtex.replace('PUBYEAR', year)
 
     ### Bibtex header NameYear
     try:
         author = medline['AuthorList'][0]['LastName']
     except:
-        author = medline['AuthorList'][0]['CollectiveName'].replace(' ', '')
-        
+        try:
+            author = medline['AuthorList'][0]['CollectiveName'].replace(' ', '')
+        except:
+            author = str()
+
     authoryear = re.sub(r'[^A-Za-z0-9]', '', author + year + title.split()[0])
     bibtex = bibtex.replace('AUTHORYEAR', authoryear)
 
