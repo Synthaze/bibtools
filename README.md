@@ -28,7 +28,7 @@ Fetch PubMed Central for open-access papers as well as Sci-Hub:
 
 ### Examples
 
-Example of working calls:
+Working calls:
 
     bibtools -i 25809265
 
