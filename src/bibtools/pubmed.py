@@ -54,7 +54,10 @@ class PubMed:
         try:
             self.doi = Article['ELocationID'][0]
         except:
-            self.doi = False
+            try:
+                self.doi = self.json['PubmedArticle'][0]['PubmedData']['ArticleIdList'][-1]
+            except:
+                self.doi = False
 
         self.pmcid = self.json['PubmedArticle'][0]['PubmedData']['ArticleIdList'][-1]
         self.pmcid = self.pmcid if 'PMC' in self.pmcid else None

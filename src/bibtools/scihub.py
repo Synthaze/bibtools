@@ -44,6 +44,8 @@ class SciHub:
 
         print('SciHub.download(): start')
 
+        print(request)
+
         for link in self.links:
 
             url = self.scheme + link
