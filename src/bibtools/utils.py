@@ -53,3 +53,18 @@ def argparse(argv):
             storage = argv[i + 1]
 
     return data, storage, formatter, bibtex, cite
+
+
+def scrapper(url, response):
+
+    try:
+        return re.sub(r'[\'"\\]', '', response.text.split('onclick="location.href=')[1].split('>')[0])
+    except:
+        pass
+
+    try:
+        return url + response.text.split('pdf.bban.top')[1].split('>')[0]
+    except:
+        pass
+
+    return None

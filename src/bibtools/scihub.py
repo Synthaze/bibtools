@@ -3,6 +3,7 @@ import re
 import os
 import requests
 from pybasics import write_file
+from bibtools.utils import scrapper
 
 
 class SciHub:
@@ -40,7 +41,7 @@ class SciHub:
 
         return None
 
-    def download(self, request=None, fname=None):
+    def download(self, doi=None, pmid=None, fname=None):
 
         print('SciHub.download(): start')
 
@@ -52,21 +53,16 @@ class SciHub:
             self.headers['origin'] = url
             self.headers['referer'] = url
 
-            self.data['request'] = 'https://doi.org/' + request
+            if doi:
+                self.data['request'] = 'https://doi.org/' + doi
+            else:
+                self.data['request'] = 'https://pubmed.ncbi.nlm.nih.gov/' + pmid
 
-            pdf = requests.post(url=url, headers=self.headers, data=self.data)
+            response = requests.post(url=url, headers=self.headers, data=self.data)
 
-            try:
-                url = re.sub(r'[\'"\\]', '', pdf.text.split('onclick="location.href=')[1].split('>')[0])
+            pdf = scrapper(url, response)
 
-            except:
-                try:
-                    url = url + pdf.text.split('pdf.bban.top')[1].split('>')[0]
-
-                except:
-                    pass
-
-            self.pdf = requests.get(url=url, headers=self.headers)
+            self.pdf = requests.get(url=pdf, headers=self.headers)
 
             write_file(fname, self.pdf.content, mode='wb')
 
