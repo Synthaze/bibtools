@@ -45,7 +45,7 @@ for reference in data:
 
             try:
                 sci = SciHub()
-                sci.download(request=pub.url + _id, fname=pub.fname + '.pdf')
+                sci.download(request=pub.doi, fname=pub.fname + '.pdf')
 
             except:
                 print('SciHub.download(): except')

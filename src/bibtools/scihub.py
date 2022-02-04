@@ -2,7 +2,7 @@
 import re
 import os
 import requests
-from pybasics import webcheck, write_file
+from pybasics import write_file
 
 
 class SciHub:
@@ -48,25 +48,27 @@ class SciHub:
 
             url = self.scheme + link
 
-            if webcheck(url):
+            self.headers['authority'] = link
+            self.headers['origin'] = url
+            self.headers['referer'] = url
 
-                self.headers['authority'] = link
-                self.headers['origin'] = url
-                self.headers['referer'] = url
+            self.data['request'] = 'https://doi.org/' + request
 
-                self.data['request'] = request
+            pdf = requests.post(url=url, headers=self.headers, data=self.data)
 
-                pdf = requests.post(url=url, headers=self.headers, data=self.data)
+            try:
+                url = re.sub(r'[\'"\\]', '', pdf.text.split('onclick="location.href=')[1].split('>')[0])
 
-                url = pdf.text.split('onclick="location.href=')[1].split('>')[0]
+            except:
+                try:
+                    url = url + pdf.text.split('pdf.bban.top')[1].split('>')[0]
 
-                url = re.sub(r'[\'"\\]', '', url)
+                except:
+                    pass
 
-                self.doi = url.split('.pdf')[0].split('pdf/')[1]
+            self.pdf = requests.get(url=url, headers=self.headers)
 
-                self.pdf = requests.get(url=url, headers=self.headers)
-
-                write_file(fname, self.pdf.content, mode='wb')
+            write_file(fname, self.pdf.content, mode='wb')
 
         print('SciHub.download(): end')
 
