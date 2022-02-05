@@ -59,8 +59,7 @@ class PubMed:
             except:
                 self.doi = False
 
-        self.pmcid = self.json['PubmedArticle'][0]['PubmedData']['ArticleIdList'][-1]
-        self.pmcid = self.pmcid if 'PMC' in self.pmcid else None
+        self.pmcid = [x for x in self.json['PubmedArticle'][0]['PubmedData']['ArticleIdList'] if 'PMC' in x][0]
 
         self.pmid = _id
 
