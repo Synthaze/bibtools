@@ -56,9 +56,10 @@ def argparse(argv):
 
 
 def scrapper(url, response):
-
     try:
-        return re.sub(r'[\'"\\]', '', response.text.split('onclick="location.href=')[1].split('>')[0])
+        link = response.text.split('onclick="location.href=')[1].split('>')[0].strip('"').strip("'")
+        link = link.replace('\\', '')
+        return link
     except:
         pass
 
