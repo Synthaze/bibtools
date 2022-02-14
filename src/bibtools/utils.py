@@ -25,6 +25,9 @@ def argparse(argv):
 
     del argv[0]
 
+    if len(argv) == 0:
+        argv.append('-h')
+
     if argv[0] in ['-h', '--help']:
         print('\n'.join(help))
         sys.exit()

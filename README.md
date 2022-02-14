@@ -60,3 +60,4 @@ Which returns:
       -p, --path=STRING      path where to write files
       -b, --bibtex           write bibtex files
       -c, --cite             print latex style TITLE~\cite{header}
+      -a, --abstract         print latex style ABSTRACT~\cite{header}
