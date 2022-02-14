@@ -10,7 +10,7 @@ import re
 import os
 
 
-data, storage, formatter, bibtex, cite = argparse(sys.argv)
+data, storage, formatter, bibtex, cite, abstract = argparse(sys.argv)
 
 citations = []
 
@@ -51,15 +51,19 @@ for reference in data:
                 print('SciHub.download(): except')
 
         pub.bibtex = json2bibtex(pub.json)
-
+        
+        header = pub.bibtex.split('@article{')[1].split(',')[0]
+        
         if bibtex:
             write_file(pub.fname + '.bib', pub.bibtex)
 
         if cite:
-            header = pub.bibtex.split('@article{')[1].split(',')[0]
-            cite = pub.RawArticleTitle.strip('.') + '~\cite{' + header +'}' + '.'
-            citations.append(cite)
-
+            citation = pub.RawArticleTitle.strip('.') + '~\cite{' + header +'}' + '.'
+            citations.append(citation)
+            
+        if abstract:
+            abstractText = pub.AbstractText.strip('.') + '~\cite{' + header +'}' + '.'
+            citations.append(abstractText)
 
 if cite:
     print('\n\n'.join(citations))

@@ -64,6 +64,10 @@ class PubMed:
         except:
             self.pmcid = False
             
+        try:
+            self.AbstractText = Article['Abstract']['AbstractText'][0]
+        except:
+            self.AbstractText = False
 
         self.pmid = _id
 

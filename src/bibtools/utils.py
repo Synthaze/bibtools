@@ -18,6 +18,7 @@ help = [
 #'  -f, --format=STRING    ',
 '  -b, --bibtex           write bibtex files',
 '  -c, --cite             print latex style TITLE~\cite{header}',
+'  -a, --abstract         print latex style ABSTRACT~\cite{header}',
 ]
 
 def argparse(argv):
@@ -34,8 +35,9 @@ def argparse(argv):
 
     bibtex = True if '-b' in argv or '--bibtex' in argv else False
     cite = True if '-c' in argv or '--cite' in argv else False
-
-    argv = [argv for argv in argv if argv not in ['-b', '--bibtex', '-c', '--cite']]
+    abstract = True if '-a' in argv or '--abstract' in argv else False
+    
+    argv = [argv for argv in argv if argv not in ['-b', '--bibtex', '-c', '--cite', '-a', '--abstract']]
 
     for i in range(0, len(argv), 2):
 
@@ -52,7 +54,7 @@ def argparse(argv):
         elif argv[i] in ['-p', '--path']:
             storage = argv[i + 1]
 
-    return data, storage, formatter, bibtex, cite
+    return data, storage, formatter, bibtex, cite, abstract
 
 
 def scrapper(url, response):
